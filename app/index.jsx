@@ -1,28 +1,49 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { View, ActivityIndicator, Text, Image, Pressable } from 'react-native';
-import "./globals.css";
-export default function Home() {
-  const router = useRouter();
+// app/index.tsx
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+// import * as Notifications from "expo-notifications";
+// import { usePushNotifications } from "../usePushNotification";
+
+export default function HomeScreen() {
+  const { expoPushToken } = usePushNotifications();
+
+  const testSOS = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🚨 SOS ALERT",
+        body: "This is a test SOS notification!",
+        sound: "default",
+        priority: "max",
+      },
+      trigger: null,
+    });
+  };
 
   return (
-    <LinearGradient
-      colors={['#FB923C', '#F97316', '#EF4444']}
-      className="flex-1 justify-center items-center px-6"
-    >
+    <View style={{ flex: 1, justifyContent: "center", padding: 20 }}>
+      <Text style={{ fontSize: 18, fontWeight: "700" }}>
+        Push Notifications Setup ✅
+      </Text>
 
+      <Text style={{ marginTop: 10 }}>Expo Push Token:</Text>
+      <Text style={{ marginTop: 5, fontSize: 12 }}>
+        {expoPushToken || "Getting token... (check console)"}
+      </Text>
 
-      {/* Login Button */}
-      <Pressable
-        onPress={() => router.push("/(tabs)")}
-        className="w-full bg-yellow-300 py-4 rounded-full shadow-lg"
+      <TouchableOpacity
+        onPress={testSOS}
+        style={{
+          marginTop: 25,
+          padding: 15,
+          backgroundColor: "red",
+          borderRadius: 12,
+          alignItems: "center",
+        }}
       >
-        <Text className="text-red-500 font-bold text-lg text-center">
-          Home
+        <Text style={{ color: "white", fontWeight: "bold" }}>
+          TEST SOS NOTIFICATION 🚨
         </Text>
-      </Pressable>
-
-    </LinearGradient>
+      </TouchableOpacity>
+    </View>
   );
 }
